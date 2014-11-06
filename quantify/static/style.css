@@ -1,0 +1,27 @@
+@font-face {
+    font-family: "DroidSans";
+    src: url('fonts/DroidSans.ttf');
+}
+@font-face {
+    font-family: "DroidSans";
+    src: url('fonts/DroidSans-Bold.ttf');
+    font-weight: bold;
+}
+@font-face {
+    font-family: "DroidSans-Mono";
+    src: url('fonts/DroidSansMono.ttf');
+}
+
+body {
+    font-family: DroidSans, sans-serif;
+    font-size: 10pt;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+#content {
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
