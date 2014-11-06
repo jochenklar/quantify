@@ -1,7 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div ng-app="quantify">
+<div ng-app="quantify">
+    <form id="EntryForm" name="EntryForm" role="form">
+        {% for group in groups %}
+            <fieldset>
+                <legend>{{group.name}}</legend>
+                {% for field in group.fields.all %}
+                <div class="form-group {{field.errors|yesno:"has-error,"}}">
+                    <label class="control-label" for="{{field.id_for_label}}">
+                        {{field.name|capfirst}}
+                    </label>
+                    <div class="controls">
+                        <input type="text" class="form-control" id="{{field.name}}">
+                    </div>
+                </div>
+                {% endfor %}
+            </fieldset>
 
-    </div>
+        {% endfor %}
+        <input class="btn btn-primary" type="submit" value="Submit" />
+    </form>
+</div>
 {% endblock %}

@@ -5,10 +5,11 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
 from forms import LoginForm
+from data.models import Group
 
 def index(request):
     if request.user.is_authenticated():
-        return render(request,'index.html', {})
+        return render(request,'index.html', {'groups': Group.objects.all()})
     else:
         return HttpResponseRedirect('/login/')
 
