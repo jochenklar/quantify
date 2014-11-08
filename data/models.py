@@ -7,6 +7,7 @@ TYPE_CHOICES = (
     ('float','Float'),
     ('time','Time'),
     ('bool','Bool'),
+    ('time','Time'),
 )
 
 class Entry(models.Model):
@@ -20,10 +21,14 @@ class Entry(models.Model):
         ordering = ['user','-date']
 
 class Group(models.Model):
+    user  = models.ForeignKey(User)
     name  = models.CharField(max_length=512)
 
     def __unicode__(self):
-        return self.name
+        return '%s, %s' % (self.user, self.name)
+
+    class Meta:
+        ordering = ['user','name']
 
 class Field(models.Model):
     name  = models.CharField(max_length=512)
@@ -32,12 +37,18 @@ class Field(models.Model):
     unit  = models.CharField(max_length=8, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return '%s, %s, %s' % (self.group.user,self.group.name,self.name)
+
+    class Meta:
+        ordering = ['group','name']
 
 class Record(models.Model):
     entry = models.ForeignKey(Entry, related_name='records')
-    field = models.ForeignKey(Field)
+    field = models.ForeignKey(Field, related_name='records')
     value = models.CharField(max_length=512)
 
     def __unicode__(self):
-        return '%s %s' % (unicode(self.entry),unicode(self.field))
+        return '%s, %s, %s' % (self.entry.date,self.entry.user,self.field.name)
+
+    class Meta:
+        ordering = ['entry','field']

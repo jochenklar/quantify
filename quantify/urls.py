@@ -6,6 +6,7 @@ from data import urls
 
 urlpatterns = patterns('',
     url(r'^$', 'quantify.views.index'),
+    url(r'^(?P<date>\d\d\d\d\-\d\d\-\d\d)/$', 'quantify.views.index'),
     url(r'^login/$', 'quantify.views.login'),
     url(r'^logout/$', 'quantify.views.logout'),
     url(r'^api/', include(urls)),
