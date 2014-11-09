@@ -18,7 +18,7 @@ class Entry(models.Model):
         return '%s (%s)' % (self.date,self.user.username)
 
     class Meta:
-        ordering = ['user','-date']
+        ordering = ['user','date']
 
 class Group(models.Model):
     user  = models.ForeignKey(User)

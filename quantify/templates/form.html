@@ -8,10 +8,10 @@
         <legend>{{fieldset.name}}</legend>
         {% for element in fieldset.elements %}
         <div class="form-group {{field.errors|yesno:"has-error,"}}">
-            <label class="col-sm-3 control-label" for="id_{{field.id}}">
+            <label class="col-sm-2 control-label" for="id_{{field.id}}">
                 {{element.field.name}}
             </label>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <input id="id_{{element.field.id}}" name="field_{{element.field.id}}" class="form-control timepicker"  
                        type="text" value="{{element.record.value}}"/>
             </div>
@@ -27,8 +27,8 @@
     <fieldset>
         <legend></legend>
         <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-3">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4">
                 <input class="btn btn-primary" type="submit" value="Submit" />
             </div>
         </div>

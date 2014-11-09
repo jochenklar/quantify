@@ -1,12 +1,15 @@
+from csv import writer as csv_writer
+from csv import QUOTE_NONNUMERIC
 from datetime import date as datetime_date
 from datetime import timedelta as datetime_timedelta
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect
 from django.utils.dateparse import parse_date
 from django.contrib.auth import authenticate as auth_authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 
 from forms import LoginForm,EntryForm
 from data.models import Entry,Group,Field,Record
@@ -33,20 +36,7 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/login/')
 
-def csv(request):
-    cols = ['Date']
-    for field in Field.objects.all():
-        cols.append(field.name)
-
-    rows = []
-    for entry in Entry.objects.all():
-        row = [entry.date]
-        for record in entry.records.all():
-            row.append(record.value)
-        rows.append(row)
-
-    return render(request,'csv.html',{'rows': rows, 'cols': cols},content_type='application/csv')
-
+@login_required
 def form(request, date=None):
     if request.user.is_authenticated():
         # get the date
@@ -110,9 +100,32 @@ def form(request, date=None):
                 'yesterday': date - datetime_timedelta(1),
                 'today': date,
                 'tomorrow': date + datetime_timedelta(1),
+                'auth': True,
                 'user': request.user
             })
     else:
         return HttpResponseRedirect('/login/')
 
+@login_required
+def csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="quantify.csv"'
 
+    writer = csv_writer(response,delimiter=',',quotechar='"',quoting=QUOTE_NONNUMERIC)
+
+    cols = ['Date']
+    for field in Field.objects.all():
+        cols.append(field.name)
+    writer.writerow(cols)
+
+    for entry in Entry.objects.all():
+        row = [entry.date]
+        for col in cols[1:]:
+            try:
+                row.append(entry.records.get(field__name=col).value)
+            except Record.DoesNotExist:
+                row.append('')
+        writer.writerow(row)
+
+    return response
