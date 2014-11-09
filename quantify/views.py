@@ -11,7 +11,43 @@ from django.contrib.auth import logout as auth_logout
 from forms import LoginForm,EntryForm
 from data.models import Entry,Group,Field,Record
 
-def index(request, date=None):
+def index(request):
+    return HttpResponseRedirect('/form/')
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            values = form.cleaned_data
+            user = auth_authenticate(username=values['username'], password=values['password'])
+            if user is not None:
+                if user.is_active:
+                    auth_login(request, user)
+                    return HttpResponseRedirect('/')
+    else:
+        form = LoginForm()
+
+    return render(request,'login.html',{'form': form})
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect('/login/')
+
+def csv(request):
+    cols = ['Date']
+    for field in Field.objects.all():
+        cols.append(field.name)
+
+    rows = []
+    for entry in Entry.objects.all():
+        row = [entry.date]
+        for record in entry.records.all():
+            row.append(record.value)
+        rows.append(row)
+
+    return render(request,'csv.html',{'rows': rows, 'cols': cols},content_type='application/csv')
+
+def form(request, date=None):
     if request.user.is_authenticated():
         # get the date
         if date == None:
@@ -69,7 +105,7 @@ def index(request, date=None):
 
                 fieldsets.append(fieldset)
 
-            return render(request,'index.html', {
+            return render(request,'form.html', {
                 'fieldsets': fieldsets,
                 'yesterday': date - datetime_timedelta(1),
                 'today': date,
@@ -79,21 +115,4 @@ def index(request, date=None):
     else:
         return HttpResponseRedirect('/login/')
 
-def login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            values = form.cleaned_data
-            user = auth_authenticate(username=values['username'], password=values['password'])
-            if user is not None:
-                if user.is_active:
-                    auth_login(request, user)
-                    return HttpResponseRedirect('/')
-    else:
-        form = LoginForm()
 
-    return render(request,'login.html',{'form': form})
-
-def logout(request):
-    auth_logout(request)
-    return HttpResponseRedirect('/login/')

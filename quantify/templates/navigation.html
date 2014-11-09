@@ -7,8 +7,8 @@
 
     {% if user %}
     <ul class="nav navbar-nav">
-        <li><a href="/{{yesterday|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-left"></a></li>
-        <li><a href="/{{tomorrow|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-right"></a></li>
+        <li><a href="/form/{{yesterday|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-left"></a></li>
+        <li><a href="/form/{{tomorrow|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-right"></a></li>
     </ul>
     {% endif %}
 </nav>
