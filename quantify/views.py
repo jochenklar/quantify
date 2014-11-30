@@ -116,7 +116,7 @@ def csv(request):
 
     cols = ['Date']
     for field in Field.objects.all():
-        cols.append(field.name)
+        cols.append(field.name.encode('utf-8'))
     writer.writerow(cols)
 
     for entry in Entry.objects.all():
