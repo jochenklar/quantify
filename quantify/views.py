@@ -112,7 +112,7 @@ def csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="quantify.csv"'
 
-    writer = csv_writer(response,delimiter=',',quotechar='"',quoting=QUOTE_NONNUMERIC)
+    writer = csv_writer(response,delimiter=';',quotechar='"',quoting=QUOTE_NONNUMERIC)
 
     cols = ['Date']
     for field in Field.objects.all():
