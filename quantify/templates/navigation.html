@@ -7,13 +7,9 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="/">
-            quantify{% if auth %}.{{user}} for {{today}}{% endif %}
+            quantify{% if auth %} for {{today}}{% endif %}
         </a>
-    </div>
-
-    {% if auth %}
-    <div class="collapse navbar-collapse" id="collapse">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav visible-xs">
             <li>
                 <a href="/form/{{yesterday|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-left"></a>
             </li>
@@ -21,7 +17,19 @@
                 <a href="/form/{{tomorrow|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-right"></a>
             </li>
         </ul>
-        <ul class="nav navbar-nav pull-right hidden-xs">
+    </div>
+
+    {% if auth %}
+    <div class="collapse navbar-collapse" id="collapse">
+        <ul class="nav navbar-nav hidden-xs">
+            <li>
+                <a href="/form/{{yesterday|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-left"></a>
+            </li>
+            <li>
+                <a href="/form/{{tomorrow|date:"Y-m-d"}}" class="glyphicon glyphicon-arrow-right"></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav pull-right">
             <li><a href="/csv">CSV</a></li>
             <li><a href="/admin">Admin</a></li>
             <li><a href="/logout">Logout</a></li>
